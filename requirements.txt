@@ -3,3 +3,5 @@ CurrencyConverter
 flask~=1.1.2
 flask-wtf
 WTForms~=2.3.3
+pymorphy2
+sqlalchemy

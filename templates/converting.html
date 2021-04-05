@@ -17,7 +17,7 @@
         </a>
       </div>
     </nav>
-    <form action="" method="post" class="mainform" style="margin: 20px auto; width: 80%">
+    <form action="" method="post" style="margin: 20px auto; width: 60%">
         <div class="input-group mb-3">
           {{ form.data_in(class="form-control") }}
           {{ form.select(class="form-select") }}
@@ -25,14 +25,24 @@
           {{ form.submit(class="btn btn-outline-primary") }}
         </div>
     </form>
-    <div class="card" style="width: 80%;">
+    <div class="card" style="width: 60%;">
       <div class="card-body">
-        <h5 class="card-title">Результат</h5>
+        <h5 class="card-title">{{ h_title }}</h5>
         <h1>{{ result }}</h1>
-        <p class="card-text"><small class="text-muted"><p class="card-text">1 {{ value }} равен {{ result_2 }} {{ value_2 }}</p></small></p>
+        <p class="card-text"><p class="card-text">{{ result_2 }}</p></p>
       </div>
       <img src="{{ url_for('static', filename='img/background-2.jpg') }}" class="card-img-bottom" alt="...">
     </div>
+    <form action="/add_comment" method="post" style="margin: 20px auto; width: 60%">
+        <h5>{{ form2.comment.label() }}</h5>
+        {{ form2.comment(class="form-control", disabled=True, style='margin-bottom: 20px') }}
+        <h5>{{ form2.username.label() }}</h5>
+        {{ form2.username(class="form-control", disabled=True, style='margin-bottom: 20px') }}
+        <h5>{{ form2.email.label() }}</h5>
+        {{ form2.email(class="form-control", disabled=True, style='margin-bottom: 20px') }}
+        {{ form2.submit(class="btn btn-outline-primary", disabled=True, style='margin-bottom: 20px') }}
+    </form>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>
 </html>
