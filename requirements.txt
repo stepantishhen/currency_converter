@@ -1,7 +1,7 @@
 requests
 CurrencyConverter
-flask~=1.1.2
+flask
 flask-wtf
-WTForms~=2.3.3
+WTForms
 pymorphy2
 sqlalchemy

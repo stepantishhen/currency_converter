@@ -1,7 +1,7 @@
 from currency_converter import CurrencyConverter
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, SubmitField, SelectField
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired
 
 converter = CurrencyConverter()
 cur_list = sorted(list(converter.currencies))
@@ -42,4 +42,5 @@ class Commenting(FlaskForm):
     comment = StringField('Комментарий', validators=[DataRequired()])
     username = StringField('Имя пользователя', validators=[DataRequired()])
     email = StringField('Email адрес', validators=[DataRequired()])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Отправить')
