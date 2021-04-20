@@ -17,3 +17,17 @@
 дату размещения комментария, сам комментарий и имя пользователя. В дальнейших планах
 можно усовершенствовать систему проверки комментария. Также расширить список валют, усовершенствовать
 систему склонения слов при отображении в результате.
+# Как запустить
+Чтобы запустить, в файле server.py нужно разкоментировать строчки после TESTING и закомментироваль все что ниже. Пример ниже
+```python
+# TESTING
+# if __name__ == '__main__':
+#     db_session.global_init("db/comments.db")
+#     port = int(os.environ.get("PORT", 5000))
+#     app.run(port=port, debug=True)
+
+if __name__ == '__main__':
+    db_session.global_init("db/comments.db")
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+```
