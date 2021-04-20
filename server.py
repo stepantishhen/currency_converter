@@ -8,65 +8,88 @@ from data import db_session
 from data.comment import Comment
 from data.form import MainForm, Commenting
 
+# Конфигурация приложения
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'myapp_secret_key'
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6Lfec60aAAAAAIVvWcgR77i_ziytfdj32T7iyJ8H'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6Lfec60aAAAAAD566qZCnsBPj_f2ZmS5WsWTL5NH'
+# API ключи капчи
+app.config['RECAPTCHA_PUBLIC_KEY'] = \
+    '6Lfec60aAAAAAIVvWcgR77i_ziytfdj32T7iyJ8H'
+app.config['RECAPTCHA_PRIVATE_KEY'] = \
+    '6Lfec60aAAAAAD566qZCnsBPj_f2ZmS5WsWTL5NH '
+# Сторонние библиотеки
 converter = CurrencyConverter()
 morph = pymorphy2.MorphAnalyzer()
 
 
+# Обработчик главной страницы
 @app.route("/", methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 
+# Обработчик страницы конвертации
 @app.route("/converting", methods=['GET', 'POST'])
 def converting():
-    form = MainForm()
-    form2 = Commenting()
+    # Инициализация форм
+    currency_form = MainForm()
+    commenting_form = Commenting()
+    # Создание сессии базы данных
     db_sess = db_session.create_session()
 
-    number = form.data_in.data
-    curr = form.select.data
-    curr_2 = form.select2.data
-    curr_short = curr[:3]
-    curr2_short = curr_2[:3]
+    # Сбор данных с формы
+    # Число - денежная величина
+    value = currency_form.data_in.data
+    # Исходная валюта
+    curr_in = currency_form.select.data
+    # В какую валюту конвертировать
+    curr_out = currency_form.select2.data
 
-    if number is None:
-        number = '0'
-        curr = form.select.default
-        curr_2 = form.select2.default
+    # Короткие символы валют
+    curr_in_short = curr_in[:3]
+    curr_out_short = curr_out[:3]
+
+    # Первоначальное отсутствие данных
+    if value is None:
+        value = '0'
+        curr_in = currency_form.select.default
+        curr_out = currency_form.select2.default
 
     try:
-        res = converter.convert(int(number), curr_short, curr2_short)
-        res = str(round(res, 2)) + ' ' + curr2_short
+        result = converter.convert(int(value), curr_in_short, curr_out_short)
+        result = str(round(result, 2)) + ' ' + curr_out_short
     except ValueError:
-        res = 'Ошибка ввода данных'
+        result = 'Ошибка ввода данных'
     except RateNotFoundError:
-        res = 'Котировка валюты не найдена'
+        result = 'Котировка валюты не найдена'
 
+    # Конвертация одной единицы валюты
     try:
-        res_2 = str(round(converter.convert(1, curr_short, curr2_short), 2))
+        result_ones = converter.convert(1, curr_in_short, curr_out_short)
+        result_ones = str(round(result_ones, 2))
     except RateNotFoundError:
-        res_2 = 'Котировка не найдена'
-    return render_template('converting.html', form=form, form2=form2,
-                           result=res,
-                           result_2=f'1 {curr_short} равен {res_2} '
-                                    f'{curr2_short}',
-                           h_title=f'{curr[6:]} в {curr_2[6:]}',
-                           comments=reversed(db_sess.query(Comment).all()))
+        result_ones = 'Котировка не найдена'
+
+    return render_template(
+        'converting.html',
+        currency_form=currency_form,
+        commenting_form=commenting_form,
+        result=result,
+        result_ones=f'1 {curr_in_short} равен {result_ones} {curr_out_short}',
+        h_title=f'{curr_in[6:]} в {curr_out[6:]}',
+        comments=reversed(db_sess.query(Comment).all())
+    )
 
 
+# Добавление комментария в БД
 @app.route("/add_comment", methods=['GET', 'POST'])
 def adding():
-    form2 = Commenting()
-    comment = Comment()
+    commenting_form = Commenting()
+    comment_db = Comment()
     db_sess = db_session.create_session()
-    comment.text = form2.comment.data
-    comment.email = form2.email.data
-    comment.username = form2.username.data
-    db_sess.add(comment)
+    comment_db.text = commenting_form.comment.data
+    comment_db.email = commenting_form.email.data
+    comment_db.username = commenting_form.username.data
+    db_sess.add(comment_db)
     db_sess.commit()
     return redirect('/converting')
 

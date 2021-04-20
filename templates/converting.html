@@ -20,30 +20,30 @@
     <div class="container">
         <form action="" method="post" style="margin: 20px auto">
             <div class="input-group mb-3">
-              {{ form.data_in(class="form-control") }}
-              {{ form.select(class="form-select") }}
-              {{ form.select2(class="form-select") }}
-              {{ form.submit(class="btn btn-outline-primary") }}
+              {{ currency_form.data_in(class="form-control") }}
+              {{ currency_form.select(class="form-select") }}
+              {{ currency_form.select2(class="form-select") }}
+              {{ currency_form.submit(class="btn btn-outline-primary") }}
             </div>
         </form>
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{ h_title }}</h5>
             <h1>{{ result }}</h1>
-            <p class="card-text">{{ result_2 }}</p>
+            <p class="card-text">{{ result_ones }}</p>
           </div>
           <img src="{{ url_for('static', filename='img/background-2.jpg') }}" class="card-img-bottom" alt="...">
         </div>
         <form action="/add_comment" method="post" style="margin: 20px auto;">
-            {{ form.csrf_token }}
-            <h5>{{ form2.comment.label() }}</h5>
-            {{ form2.comment(class="form-control", style='margin-bottom: 20px') }}
-            <h5>{{ form2.username.label() }}</h5>
-            {{ form2.username(class="form-control", style='margin-bottom: 20px') }}
-            <h5>{{ form2.email.label() }}</h5>
-            {{ form2.email(class="form-control", style='margin-bottom: 20px') }}
-            {{ form2.recaptcha }}
-            {{ form2.submit(class="btn btn-outline-primary", style='margin-bottom: 20px; margin-top: 20px') }}
+            {{ commenting_form.csrf_token }}
+            <h5>{{ commenting_form.comment.label() }}</h5>
+            {{ commenting_form.comment(class="form-control", style='margin-bottom: 20px') }}
+            <h5>{{ commenting_form.username.label() }}</h5>
+            {{ commenting_form.username(class="form-control", style='margin-bottom: 20px') }}
+            <h5>{{ commenting_form.email.label() }}</h5>
+            {{ commenting_form.email(class="form-control", style='margin-bottom: 20px') }}
+            {{ commenting_form.recaptcha }}
+            {{ commenting_form.submit(class="btn btn-outline-primary", style='margin-bottom: 20px; margin-top: 20px') }}
         </form>
         <h4>Комментарии</h4>
         {% for i in comments %}
